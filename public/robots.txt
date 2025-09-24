@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://chess.dev/sitemap-index.xml
+
+# Disallow certain paths if needed
+# Disallow: /admin/
+# Disallow: /api/
+
+# Allow common crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /

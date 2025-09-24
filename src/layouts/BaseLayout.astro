@@ -1,0 +1,65 @@
+---
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+}
+
+const { title = "p4bl0vx - Página personal", description = "Jugador de CTFs, especializado en pwn y reversing.", image } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!DOCTYPE html>
+<html lang="es" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    
+    <!-- SEO -->
+    <title>{title}</title>
+    <link rel="canonical" href={canonicalURL} />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {image && <meta property="og:image" content={new URL(image, Astro.url)} />}
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    {image && <meta property="twitter:image" content={new URL(image, Astro.url)} />}
+  </head>
+  <body>
+    <div class="min-h-screen" style="background-color: var(--ctp-base);">
+      <slot />
+    </div>
+    
+    <script>
+      // Theme toggle functionality
+      function initTheme() {
+        const theme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.classList.toggle('dark', theme === 'dark');
+      }
+      
+      function toggleTheme() {
+        const isDark = document.documentElement.classList.contains('dark');
+        document.documentElement.classList.toggle('dark', !isDark);
+        localStorage.setItem('theme', isDark ? 'light' : 'dark');
+      }
+      
+      initTheme();
+      
+      // Make toggleTheme available globally
+      (window as any).toggleTheme = toggleTheme;
+    </script>
+  </body>
+</html>

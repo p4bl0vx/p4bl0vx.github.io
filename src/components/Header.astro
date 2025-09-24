@@ -1,0 +1,165 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 backdrop-blur-sm border-b" style="background-color: color-mix(in srgb, var(--ctp-base) 90%, transparent); border-color: var(--ctp-surface0);">
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <!-- Logo -->
+      <a href="/" class="flex items-center space-x-2 group">
+        <div class="w-8 h-8 bg-gradient-to-br rounded-lg flex items-center justify-center" style="background: linear-gradient(to bottom right, var(--ctp-blue), var(--ctp-lavender));">
+          <span class="font-orbitron font-bold text-sm" style="color: var(--ctp-base);">P</span>
+        </div>
+        <span class="font-orbitron font-bold text-xl transition-colors" style="color: var(--ctp-text);">
+          p4bl0vx
+        </span>
+      </a>
+
+      <!-- Navigation -->
+      <div class="hidden md:flex items-center space-x-8">
+        <a 
+          href="/" 
+          class={`nav-link ${currentPath === '/' ? 'active' : ''}`}
+        >
+          Home
+        </a>
+        <a 
+          href="/blog" 
+          class={`nav-link ${currentPath.startsWith('/blog') ? 'active' : ''}`}
+        >
+          Blog
+        </a>
+        <!-- <a 
+          href="/projects" 
+          class={`nav-link ${currentPath.startsWith('/projects') ? 'active' : ''}`}
+        >
+          Proyectos
+        </a> -->
+        <a 
+          href="/about" 
+          class={`nav-link ${currentPath === '/about' ? 'active' : ''}`}
+        >
+          Sobre mí
+        </a>
+        <a 
+          href="/contact" 
+          class={`nav-link ${currentPath === '/contact' ? 'active' : ''}`}
+        >
+          Contacto
+        </a>
+        <ThemeToggle />
+      </div>
+
+      <!-- Mobile menu button -->
+      <div class="md:hidden flex items-center space-x-4">
+        <ThemeToggle />
+        <button
+          type="button"
+          class="mobile-menu-button p-2 rounded-md focus:outline-none focus:ring-2 transition-colors"
+          style="color: var(--ctp-text); --tw-ring-color: var(--ctp-blue);"
+          aria-expanded="false"
+        >
+          <span class="sr-only">Abrir menú principal</span>
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div class="md:hidden mobile-menu hidden">
+      <div class="px-2 pt-2 pb-3 space-y-1 border-t" style="border-color: var(--ctp-surface0);">
+        <a 
+          href="/" 
+          class={`mobile-nav-link ${currentPath === '/' ? 'active' : ''}`}
+        >
+          Home
+        </a>
+        <a 
+          href="/blog" 
+          class={`mobile-nav-link ${currentPath.startsWith('/blog') ? 'active' : ''}`}
+        >
+          Blog
+        </a>
+        <!-- <a 
+          href="/projects" 
+          class={`mobile-nav-link ${currentPath.startsWith('/projects') ? 'active' : ''}`}
+        >
+          Proyectos
+        </a> -->
+        <a 
+          href="/about" 
+          class={`mobile-nav-link ${currentPath === '/about' ? 'active' : ''}`}
+        >
+          Sobre mí
+        </a>
+        <a 
+          href="/contact" 
+          class={`mobile-nav-link ${currentPath === '/contact' ? 'active' : ''}`}
+        >
+          Contacto
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<style>
+  .nav-link {
+    color: var(--ctp-subtext1);
+    transition: color 0.2s ease-in-out;
+    font-weight: 500;
+  }
+  
+  .nav-link:hover {
+    color: var(--ctp-text);
+  }
+  
+  .nav-link.active {
+    color: var(--ctp-blue);
+  }
+  
+  .mobile-nav-link {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--ctp-subtext1);
+    border-radius: 0.375rem;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .mobile-nav-link:hover {
+    color: var(--ctp-text);
+    background-color: var(--ctp-surface0);
+  }
+  
+  .mobile-nav-link.active {
+    color: var(--ctp-blue);
+    background-color: var(--ctp-surface0);
+  }
+  
+  .mobile-menu-button:hover {
+    color: var(--ctp-lavender);
+    background-color: var(--ctp-surface0);
+  }
+</style>
+
+<script>
+  // Mobile menu toggle
+  document.addEventListener('DOMContentLoaded', () => {
+    const menuButton = document.querySelector('.mobile-menu-button');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    
+    if (menuButton && mobileMenu) {
+      menuButton.addEventListener('click', () => {
+        const isExpanded = menuButton.getAttribute('aria-expanded') === 'true';
+        menuButton.setAttribute('aria-expanded', (!isExpanded).toString());
+        mobileMenu.classList.toggle('hidden');
+      });
+    }
+  });
+</script>

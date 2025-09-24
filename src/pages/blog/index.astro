@@ -1,0 +1,341 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog');
+const publishedPosts = allPosts
+  .filter(post => !post.data.draft && post.data.visible)
+  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+
+// Obtener todas las categorías y tags únicos
+const categories = [...new Set(publishedPosts.map(post => post.data.category))];
+const allTags = [...new Set(publishedPosts.flatMap(post => post.data.tags))];
+---
+
+<MainLayout 
+  title="Blog - p4bl0vx"
+  description="Explicaciones detalladas de retos de CTF, técnicas de explotación y proyectos..."
+>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Header -->
+    <div class="text-center mb-16">
+      <h1 style="color: var(--ctp-text)" class="font-orbitron font-bold text-4xl md:text-5xl mb-4">
+        Blog <span style="color: var(--ctp-blue)">Posts</span>
+      </h1>
+      <p style="color: var(--ctp-subtext1)" class="text-lg max-w-2xl mx-auto leading-relaxed">
+        Explicaciones detalladas de retos de CTF, técnicas de explotación y proyectos...
+      </p>
+    </div>
+
+    <!-- Filters -->
+    <div class="mb-12">
+      <div class="flex flex-wrap justify-center gap-4 mb-8">
+        <button class="filter-btn active" data-category="all">
+          Todos ({publishedPosts.length})
+        </button>
+        {categories.map(category => {
+          const count = publishedPosts.filter(post => post.data.category === category).length;
+          return (
+            <button class={`filter-btn category-${category}`} data-category={category}>
+              {category.toUpperCase()} ({count})
+            </button>
+          );
+        })}
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="mb-12">
+      <div class="max-w-md mx-auto">
+        <div class="relative">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Buscar writeups..."
+            style="width: 100%; padding: 16px 16px 12px 48px; background-color: var(--ctp-surface0); border: 1px solid var(--ctp-surface1); border-radius: 8px; color: var(--ctp-text);"
+            placeholder="Buscar writeups..."
+          />
+          <svg style="color: var(--ctp-subtext0);" class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Posts Grid -->
+    <div id="posts-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {publishedPosts.map((post) => (
+        <article 
+          class="post-card group" 
+          data-category={post.data.category}
+          data-tags={post.data.tags.join(' ')}
+          data-title={post.data.title.toLowerCase()}
+          data-description={post.data.description.toLowerCase()}
+        >
+          <div class="post-card-content">
+            <!-- Post meta -->
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center space-x-2">
+                <span class={`category-badge category-${post.data.category}`}>
+                  {post.data.category.toUpperCase()}
+                </span>
+              </div>
+              <time style="color: var(--ctp-subtext0);" class="text-sm">
+                {post.data.publishDate.toLocaleDateString('es-ES', { 
+                  year: 'numeric', 
+                  month: 'short', 
+                  day: 'numeric' 
+                })}
+              </time>
+            </div>
+
+            <!-- Title -->
+            <h2 style="color: var(--ctp-text)" 
+                onmouseover="this.style.color='var(--ctp-blue)'" 
+                onmouseout="this.style.color='var(--ctp-text)'"
+                class="font-orbitron font-bold text-xl mb-3 transition-colors line-clamp-2">
+              {post.data.title}
+            </h2>
+
+            <!-- Description -->
+            <p style="color: var(--ctp-subtext1)" class="text-sm leading-relaxed mb-4 line-clamp-3">
+              {post.data.description}
+            </p>
+
+            <!-- Tags -->
+            <div class="flex flex-wrap gap-2 mb-6">
+              {post.data.tags.slice(0, 4).map(tag => (
+                <span class="tag">{tag}</span>
+              ))}
+              {post.data.tags.length > 4 && (
+                <span class="tag">+{post.data.tags.length - 4} más</span>
+              )}
+            </div>
+
+            <!-- Read more link -->
+            <a 
+              href={`/blog/${post.slug}`}
+              style="color: var(--ctp-blue)" 
+              onmouseover="this.style.color='var(--ctp-sky)'" 
+              onmouseout="this.style.color='var(--ctp-blue)'"
+              class="inline-flex items-center transition-colors font-medium"
+            >
+              Leer post
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- No results message -->
+    <div id="no-results" class="hidden text-center py-16">
+      <div style="width: 96px; height: 96px; background-color: var(--ctp-surface0);" class="rounded-full flex items-center justify-center mx-auto mb-6">
+        <svg style="color: var(--ctp-subtext0);" class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+      <h3 style="color: var(--ctp-text)" class="font-orbitron font-bold text-xl mb-2">
+        No se encontraron posts
+      </h3>
+      <p style="color: var(--ctp-subtext1)">
+        Intenta con otros términos de búsqueda o filtros.
+      </p>
+    </div>
+
+    <!-- Load more (for future pagination) -->
+    <div class="text-center mt-16">
+      <p style="color: var(--ctp-subtext0);" class="text-sm">
+        Mostrando {publishedPosts.length} posts
+      </p>
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  /* Filter buttons */
+  .filter-btn {
+    padding: 8px 16px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 8px;
+    border: 1px solid var(--ctp-surface1);
+    color: var(--ctp-subtext1);
+    background-color: var(--ctp-surface0);
+    transition: all 0.2s;
+  }
+  
+  .filter-btn:hover {
+    color: var(--ctp-text);
+    border-color: var(--ctp-blue);
+  }
+  
+  .filter-btn.active {
+    background-color: var(--ctp-blue);
+    color: var(--ctp-base);
+    border-color: var(--ctp-blue);
+  }
+  
+  /* Post cards */
+  .post-card {
+    background-color: var(--ctp-surface0);
+    border-radius: 12px;
+    border: 1px solid var(--ctp-surface1);
+    transition: all 0.3s;
+  }
+  
+  .post-card:hover {
+    border-color: var(--ctp-blue);
+    box-shadow: 0 10px 25px -5px rgba(var(--ctp-blue-rgb), 0.1);
+    transform: scale(1.05);
+  }
+  
+  .post-card-content {
+    padding: 24px;
+  }
+  
+  /* Category badges */
+  .category-badge {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border-radius: 4px;
+  }
+  
+  .category-pwn { 
+    background-color: rgba(var(--ctp-red-rgb), 0.2); 
+    color: var(--ctp-red); 
+  }
+  .category-web { 
+    background-color: rgba(var(--ctp-blue-rgb), 0.2); 
+    color: var(--ctp-blue); 
+  }
+  .category-crypto { 
+    background-color: rgba(var(--ctp-mauve-rgb), 0.2); 
+    color: var(--ctp-mauve); 
+  }
+  .category-reverse { 
+    background-color: rgba(var(--ctp-peach-rgb), 0.2); 
+    color: var(--ctp-peach); 
+  }
+  .category-forensics { 
+    background-color: rgba(var(--ctp-green-rgb), 0.2); 
+    color: var(--ctp-green); 
+  }
+  .category-misc { 
+    background-color: rgba(var(--ctp-yellow-rgb), 0.2); 
+    color: var(--ctp-yellow); 
+  }
+  .category-osint { 
+    background-color: rgba(var(--ctp-teal-rgb), 0.2); 
+    color: var(--ctp-teal); 
+  }
+  .category-hardware { 
+    background-color: rgba(var(--ctp-sapphire-rgb), 0.2); 
+    color: var(--ctp-sapphire); 
+  }
+  
+  /* Tags */
+  .tag {
+    padding: 8px;
+    font-size: 0.75rem;
+    background-color: var(--ctp-surface1);
+    color: var(--ctp-subtext1);
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    cursor: default;
+  }
+  
+  .tag:hover {
+    background-color: var(--ctp-surface2);
+  }
+  
+  /* Utility classes */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  // Filter and search functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const searchInput = document.getElementById('search-input');
+    const postsContainer = document.getElementById('posts-container');
+    const noResults = document.getElementById('no-results');
+    const postCards = document.querySelectorAll('.post-card');
+    
+    let currentCategory = 'all';
+    let currentSearch = '';
+    
+    // Filter by category
+    filterButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        // Update active button
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        
+        // Update current category
+        currentCategory = this.dataset.category;
+        filterPosts();
+      });
+    });
+    
+    // Search functionality
+    if (searchInput) {
+      searchInput.addEventListener('input', function() {
+        currentSearch = this.value.toLowerCase().trim();
+        filterPosts();
+      });
+    }
+    
+    function filterPosts() {
+      let visiblePosts = 0;
+      
+      postCards.forEach(card => {
+        const cardCategory = card.dataset.category;
+        const cardTitle = card.dataset.title;
+        const cardDescription = card.dataset.description;
+        const cardTags = card.dataset.tags;
+        
+        // Check category filter
+        const categoryMatch = currentCategory === 'all' || cardCategory === currentCategory;
+        
+        // Check search filter
+        const searchMatch = !currentSearch || 
+          cardTitle.includes(currentSearch) || 
+          cardDescription.includes(currentSearch) ||
+          cardTags.includes(currentSearch);
+        
+        // Show/hide card
+        if (categoryMatch && searchMatch) {
+          card.style.display = 'block';
+          visiblePosts++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      
+      // Show/hide no results message
+      if (visiblePosts === 0) {
+        postsContainer.style.display = 'none';
+        noResults.classList.remove('hidden');
+      } else {
+        postsContainer.style.display = 'grid';
+        noResults.classList.add('hidden');
+      }
+    }
+  });
+</script>

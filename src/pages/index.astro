@@ -1,16 +1,653 @@
 ---
+import MainLayout from '../layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
 
+// Obtener últimos posts del blog
+const blogPosts = await getCollection('blog');
+const latestPosts = blogPosts
+  .filter(post => !post.data.draft && post.data.visible)
+  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
+  .slice(0, 3);
+
+// Obtener proyectos destacados
+// const projects = await getCollection('projects');
+// const featuredProjects = projects
+//   .filter(project => project.data.featured)
+//   .slice(0, 3);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<MainLayout 
+  title="p4bl0vx - Página personal"
+  description="Jugador de CTFs, especializado en pwn y reversing."
+>
+  <!-- Hero Section -->
+  <section class="py-20 px-4 sm:px-6 lg:px-8" style="background: linear-gradient(to bottom right, var(--ctp-base), var(--ctp-mantle), var(--ctp-base)); position: relative; z-index: 1;">
+    <div class="max-w-6xl mx-auto" style="position: relative; z-index: 2;">
+      <div class="text-center" style="pointer-events: auto;">
+        <!-- Avatar/Logo -->
+        <div class="w-32 h-32 rounded-full mx-auto mb-8 flex items-center justify-center" style="background: linear-gradient(to bottom right, var(--ctp-blue), var(--ctp-lavender), var(--ctp-mauve)); pointer-events: auto;">
+          <span class="font-orbitron font-black text-4xl" style="color: var(--ctp-base); pointer-events: auto;">P</span>
+        </div>
+        
+        <!-- Main heading -->
+        <h1 class="font-orbitron font-black text-4xl md:text-6xl lg:text-7xl mb-6" style="color: var(--ctp-text); pointer-events: auto; user-select: text;">
+          <span class="bg-gradient-to-r bg-clip-text text-transparent" style="background: linear-gradient(to right, var(--ctp-blue), var(--ctp-lavender), var(--ctp-mauve)); -webkit-background-clip: text; background-clip: text; pointer-events: auto; user-select: text;">
+            p4bl0vx
+          </span>
+        </h1>
+        
+        <!-- Subtitle -->
+        <p class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto leading-relaxed" style="color: var(--ctp-subtext1); pointer-events: auto; user-select: text;">
+          👋 Hola, soy Pablo. Jugador de <span class="font-semibold" style="color: var(--ctp-blue);">CTFs</span>, especializado en 
+          <span class="font-semibold" style="color: var(--ctp-red);">pwn</span> y 
+          <span class="font-semibold" style="color: var(--ctp-peach);">reversing</span>.
+          Aquí comparto <span class="font-semibold" style="color: var(--ctp-lavender);">writeups</span>, <span class="font-semibold" style="color: var(--ctp-green);">proyectos</span> y más cosas.
+        </p>
+        
+        <!-- CTA Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center" style="pointer-events: auto;">
+          <a 
+            href="/blog" 
+            class="hero-btn-primary"
+            style="pointer-events: auto; z-index: 10; position: relative;"
+          >
+            Ver blog
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </a>
+          <a 
+            href="/contact" 
+            class="hero-btn-secondary"
+            style="pointer-events: auto; z-index: 10; position: relative;"
+          >
+            Contactar
+          </a>
+          <!-- <a 
+            href="/projects" 
+            class="btn-secondary"
+          >
+            Explorar Proyectos
+          </a> -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Expertise Section -->
+  <section class="py-12 px-4 sm:px-6 lg:px-8 border-y" style="background-color: var(--ctp-mantle); border-color: var(--ctp-surface0);">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 text-center">
+        <div class="expertise-item">
+          <div class="expertise-icon">
+            <!-- C language official icon -->
+            <svg class="w-12 h-12" viewBox="0 0 306 345" xmlns="http://www.w3.org/2000/svg" width="306" height="345" fill="none">
+              <g clip-path="url(#c__a)">
+                <path fill="#00599C" d="M302.107 258.262c2.401-4.159 3.893-8.845 3.893-13.053V99.139c0-4.207-1.49-8.892-3.892-13.051L153 172.175l149.107 86.087Z"/>
+                <path fill="#004482" d="m166.25 341.193 126.5-73.034c3.644-2.104 6.956-5.737 9.357-9.897L153 172.175 3.893 258.263c2.4 4.159 5.714 7.793 9.357 9.896l126.5 73.034c7.287 4.208 19.213 4.208 26.5 0Z"/>
+                <path fill="#659AD2" d="M302.108 86.087c-2.402-4.16-5.715-7.793-9.358-9.897L166.25 3.156c-7.287-4.208-19.213-4.208-26.5 0L13.25 76.19C5.962 80.397 0 90.725 0 99.14v146.069c0 4.208 1.491 8.894 3.893 13.053L153 172.175l149.108-86.088Z"/>
+                <path fill="#fff" d="M153 274.175c-56.243 0-102-45.757-102-102s45.757-102 102-102c36.292 0 70.139 19.53 88.331 50.968l-44.143 25.544c-9.105-15.736-26.038-25.512-44.188-25.512-28.122 0-51 22.878-51 51 0 28.121 22.878 51 51 51 18.152 0 35.085-9.776 44.191-25.515l44.143 25.543c-18.192 31.441-52.04 50.972-88.334 50.972Z"/>
+              </g>
+              <defs>
+                <clipPath id="c__a">
+                  <path fill="#fff" d="M0 0h306v344.35H0z"/>
+                </clipPath>
+              </defs>
+            </svg>
+          </div>
+          <h3 class="expertise-title">C</h3>
+        </div>
+        
+        <div class="expertise-item">
+          <div class="expertise-icon">
+            <!-- Assembly/CPU icon -->
+            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--ctp-red);">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <h3 class="expertise-title">Assembly</h3>
+        </div>
+        
+        <div class="expertise-item">
+          <div class="expertise-icon">
+            <!-- Exploit development flag icon -->
+            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--ctp-peach);">
+              <path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="expertise-title">Exploit Development</h3>
+        </div>
+        
+        <div class="expertise-item">
+          <div class="expertise-icon">
+            <!-- Python official icon -->
+            <svg class="w-12 h-12" fill="none" viewBox="16 16 32 32">
+              <path fill="var(--ctp-blue)" d="M31.885 16c-8.124 0-7.617 3.523-7.617 3.523l.01 3.65h7.752v1.095H21.197S16 23.678 16 31.876c0 8.196 4.537 7.906 4.537 7.906h2.708v-3.804s-.146-4.537 4.465-4.537h7.688s4.32.07 4.32-4.175v-7.019S40.374 16 31.885 16zm-4.275 2.454a1.394 1.394 0 1 1 0 2.79 1.393 1.393 0 0 1-1.395-1.395c0-.771.624-1.395 1.395-1.395z"/>
+              <path fill="var(--ctp-yellow)" d="M32.115 47.833c8.124 0 7.617-3.523 7.617-3.523l-.01-3.65H31.97v-1.095h10.832S48 40.155 48 31.958c0-8.197-4.537-7.906-4.537-7.906h-2.708v3.803s.146 4.537-4.465 4.537h-7.688s-4.32-.07-4.32 4.175v7.019s-.656 4.247 7.833 4.247zm4.275-2.454a1.393 1.393 0 0 1-1.395-1.395 1.394 1.394 0 1 1 1.395 1.395z"/>
+            </svg>
+          </div>
+          <h3 class="expertise-title">Python</h3>
+        </div>
+        
+        <div class="expertise-item">
+          <div class="expertise-icon">
+            <!-- Bot/AI agent icon -->
+            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--ctp-mauve);">
+              <path d="M12 8V4H8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect width="16" height="12" x="4" y="8" rx="2" stroke-width="1.5"/>
+              <path d="M2 14h2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M20 14h2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15 13v2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 13v2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="expertise-title">AI Agents</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest Blog Posts -->
+  <section class="py-20 px-4 sm:px-6 lg:px-8" style="background-color: var(--ctp-surface0);">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="font-orbitron font-bold text-3xl md:text-4xl mb-4" style="color: var(--ctp-text);">
+          Últimos <span style="color: var(--ctp-lavender);">Posts</span>
+        </h2>
+        <p class="text-lg max-w-2xl mx-auto" style="color: var(--ctp-subtext1);">
+          Explicaciones detalladas de retos de CTF, técnicas de explotación y proyectos...
+        </p>
+      </div>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        {latestPosts.map((post) => (
+          <article class="blog-card group">
+            <div class="blog-card-content">
+              <div class="flex items-center justify-between mb-4">
+                <span class={`category-badge category-${post.data.category}`}>
+                  {post.data.category.toUpperCase()}
+                </span>
+                <span class="text-sm" style="color: var(--ctp-subtext0);">
+                  {post.data.publishDate.toLocaleDateString('es-ES')}
+                </span>
+              </div>
+              
+              <h3 class="font-orbitron font-bold text-xl mb-3 group-hover-lavender transition-colors" style="color: var(--ctp-text);">
+                {post.data.title}
+              </h3>
+              
+              <p class="text-sm leading-relaxed mb-4 line-clamp-3" style="color: var(--ctp-subtext1);">
+                {post.data.description}
+              </p>
+              
+              <div class="flex flex-wrap gap-2 mb-4">
+                {post.data.tags.slice(0, 3).map(tag => (
+                  <span class="tag">{tag}</span>
+                ))}
+              </div>
+              
+              <a 
+                href={`/blog/${post.slug}`}
+                class="inline-flex items-center font-medium transition-colors read-more-link"
+                style="color: var(--ctp-blue);"
+              >
+                Leer más
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+      
+      <div class="text-center">
+        <a href="/blog" class="btn-primary">
+          Ver todos los posts
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Projects -->
+  <!-- <section class="py-20 px-4 sm:px-6 lg:px-8" style="background-color: var(--ctp-mantle);">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="font-orbitron font-bold text-3xl md:text-4xl mb-4" style="color: var(--ctp-text);">
+          Proyectos <span style="color: var(--ctp-peach);">Destacados</span>
+        </h2>
+        <p class="text-lg max-w-2xl mx-auto" style="color: var(--ctp-subtext1);">
+          Herramientas de explotación, scripts de automatización y utilidades para pentesting y análisis de binarios.
+        </p>
+      </div>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        {featuredProjects.map((project) => (
+          <article class="project-card group">
+            <div class="project-card-content">
+              <div class="flex items-center justify-between mb-4">
+                <span class={`category-badge category-${project.data.category}`}>
+                  {project.data.category.toUpperCase()}
+                </span>
+                <div class="flex items-center space-x-2">
+                  {project.data.github && (
+                    <a 
+                      href={project.data.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style="color: var(--ctp-subtext1);" 
+                      onmouseover="this.style.color='var(--ctp-text)'" 
+                      onmouseout="this.style.color='var(--ctp-subtext1)'"
+                      class="transition-colors"
+                    >
+                      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                      </svg>
+                    </a>
+                  )}
+                </div>
+              </div>
+              
+              <h3 style="color: var(--ctp-text)" 
+                  onmouseover="this.style.color='var(--ctp-peach)'" 
+                  onmouseout="this.style.color='var(--ctp-text)'"
+                  class="font-orbitron font-bold text-xl mb-3 transition-colors">
+                {project.data.title}
+              </h3>
+              
+              <p style="color: var(--ctp-subtext1)" class="text-sm leading-relaxed mb-4 line-clamp-3">
+                {project.data.description}
+              </p>
+              
+              <div class="flex flex-wrap gap-2 mb-4">
+                {project.data.tags.slice(0, 3).map(tag => (
+                  <span class="tag">{tag}</span>
+                ))}
+              </div>
+              
+              <a 
+                href={`/projects/${project.slug}`}
+                style="color: var(--ctp-peach)" 
+                onmouseover="this.style.color='var(--ctp-yellow)'" 
+                onmouseout="this.style.color='var(--ctp-peach)'"
+                class="inline-flex items-center transition-colors font-medium"
+              >
+                Ver proyecto
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+      
+      <div class="text-center">
+        <a href="/projects" class="btn-secondary">
+          Ver todos los proyectos
+        </a>
+      </div>
+    </div>
+  </section> -->
+
+  <!-- Contact CTA -->
+  <section class="py-20 px-4 sm:px-6 lg:px-8" style="background: linear-gradient(135deg, var(--ctp-surface0) 0%, var(--ctp-mantle) 100%);">
+    <div class="max-w-4xl mx-auto">
+      <!-- Background pattern -->
+      <div class="absolute inset-0 opacity-5">
+        <div class="w-full h-full" style="background-image: url('data:image/svg+xml,<svg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"><g fill=\"none\" fill-rule=\"evenodd\"><g fill=\"%23cdd6f4\" fill-opacity=\"0.1\"><circle cx=\"30\" cy=\"30\" r=\"1.5\"/></g></g></svg>'); background-size: 30px 30px;"></div>
+      </div>
+      
+      <div class="relative z-10 text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full mb-6" style="background: linear-gradient(to bottom right, var(--ctp-blue), var(--ctp-lavender));">
+          <svg class="w-8 h-8" style="color: var(--ctp-base);" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+          </svg>
+        </div>
+        
+        <h2 style="color: var(--ctp-text)" class="font-orbitron font-bold text-3xl md:text-4xl mb-6">
+          ¿Conectamos?
+        </h2>
+        
+        <p style="color: var(--ctp-subtext1)" class="text-xl mb-8 max-w-3xl mx-auto leading-relaxed">
+          Si quieres colaborar en un proyecto, charlar sobre CTFs, simplemente saludar o tienes alguna 
+          oferta de trabajo 😉, estaré encantado de ver qué podemos hacer juntos.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/contact" class="btn-primary flex items-center justify-center">
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+            </svg>
+            Contactar
+          </a>
+        <a 
+          href="https://github.com/p4bl0vx" 
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-secondary flex items-center justify-center"
+        >
+          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+            Ver GitHub
+        </a>
+      </div>
+    </div>
+  </section>
+</MainLayout>
+
+<style>
+  /* Hero Buttons */
+  .hero-btn-primary {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0.875rem 2rem !important;
+    background: linear-gradient(to right, var(--ctp-blue), var(--ctp-lavender)) !important;
+    color: var(--ctp-base) !important;
+    font-weight: 600 !important;
+    border-radius: 0.5rem !important;
+    transition: all 0.3s ease !important;
+    transform: scale(1) !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+    text-decoration: none !important;
+    position: relative !important;
+    overflow: hidden !important;
+    border: none !important;
+    pointer-events: auto !important;
+    z-index: 100 !important;
+    user-select: none !important;
+  }
+  
+  .hero-btn-primary:hover {
+    background: linear-gradient(to right, var(--ctp-lavender), var(--ctp-blue)) !important;
+    transform: scale(1.05) translateY(-2px) !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2) !important;
+    text-decoration: none !important;
+    pointer-events: auto !important;
+  }
+  
+  .hero-btn-secondary {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0.875rem 2rem !important;
+    border: 2px solid var(--ctp-blue) !important;
+    color: var(--ctp-blue) !important;
+    background-color: transparent !important;
+    font-weight: 600 !important;
+    border-radius: 0.5rem !important;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+    position: relative !important;
+    overflow: hidden !important;
+    pointer-events: auto !important;
+    z-index: 100 !important;
+    user-select: none !important;
+  }
+  
+  .hero-btn-secondary:hover {
+    background-color: var(--ctp-blue) !important;
+    color: var(--ctp-base) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+    text-decoration: none !important;
+    pointer-events: auto !important;
+  }
+
+  /* Existing styles */
+  /* Buttons */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(to right, var(--ctp-blue), var(--ctp-lavender));
+    color: var(--ctp-base);
+    font-weight: 600;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    transform: scale(1);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+  }
+  
+  .btn-primary:hover {
+    background: linear-gradient(to right, var(--ctp-lavender), var(--ctp-blue));
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .btn-primary:hover::before {
+    left: 100%;
+  }
+  
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--ctp-blue);
+    color: var(--ctp-blue);
+    background-color: transparent;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn-secondary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background-color: var(--ctp-blue);
+    transition: width 0.3s ease;
+    z-index: -1;
+  }
+  
+  .btn-secondary:hover {
+    color: var(--ctp-base);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .btn-secondary:hover::before {
+    width: 100%;
+  }
+  
+  /* Stats */
+  .stat-item {
+    text-align: center;
+  }
+  
+  .stat-number {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 1.875rem;
+    color: var(--ctp-lavender);
+    margin-bottom: 0.5rem;
+  }
+  
+  @media (min-width: 768px) {
+    .stat-number {
+      font-size: 2.25rem;
+    }
+  }
+  
+  .stat-label {
+    color: var(--ctp-subtext1);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+  
+  /* Expertise Section - Minimalist */
+  .expertise-item {
+    text-align: center;
+    transition: all 0.3s ease;
+    padding: 1rem;
+  }
+  
+  .expertise-item:hover {
+    transform: translateY(-2px);
+  }
+  
+  .expertise-icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+  }
+  
+  .expertise-item:hover .expertise-icon svg {
+    transform: scale(1.1);
+  }
+  
+  .expertise-title {
+    font-family: 'Orbitron', monospace;
+    font-weight: 600;
+    font-size: 1.125rem;
+    color: var(--ctp-text);
+    margin: 0;
+    transition: all 0.3s ease;
+  }
+  
+  .expertise-item:hover .expertise-title {
+    color: var(--ctp-lavender);
+  }
+  
+  /* Cards */
+  .blog-card {
+    background-color: var(--ctp-surface0);
+    border-radius: 0.75rem;
+    border: 1px solid var(--ctp-surface1);
+    transition: all 0.3s ease;
+    transform: scale(1);
+  }
+  
+  .blog-card:hover {
+    border-color: var(--ctp-blue);
+    transform: scale(1.05);
+    box-shadow: 0 25px 50px -12px rgba(137, 180, 250, 0.1);
+  }
+  
+  .blog-card-content {
+    padding: 1.5rem;
+  }
+  
+  .project-card {
+    background-color: var(--ctp-surface0);
+    border-radius: 0.75rem;
+    border: 1px solid var(--ctp-surface1);
+    transition: all 0.3s ease;
+    transform: scale(1);
+  }
+  
+  .project-card:hover {
+    border-color: var(--ctp-peach);
+    transform: scale(1.05);
+    box-shadow: 0 25px 50px -12px rgba(250, 179, 135, 0.1);
+  }
+  
+  .project-card-content {
+    padding: 1.5rem;
+  }
+  
+  /* Category badges */
+  .category-badge {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 9999px;
+  }
+  
+  .category-pwn { 
+    background-color: rgba(243, 139, 168, 0.2); 
+    color: var(--ctp-red); 
+  }
+  .category-web { 
+    background-color: rgba(137, 180, 250, 0.2); 
+    color: var(--ctp-blue); 
+  }
+  .category-crypto { 
+    background-color: rgba(203, 166, 247, 0.2); 
+    color: var(--ctp-mauve); 
+  }
+  .category-reverse { 
+    background-color: rgba(250, 179, 135, 0.2); 
+    color: var(--ctp-peach); 
+  }
+  .category-forensics { 
+    background-color: rgba(166, 227, 161, 0.2); 
+    color: var(--ctp-green); 
+  }
+  .category-misc { 
+    background-color: rgba(249, 226, 175, 0.2); 
+    color: var(--ctp-yellow); 
+  }
+  .category-osint { 
+    background-color: rgba(148, 226, 213, 0.2); 
+    color: var(--ctp-teal); 
+  }
+  .category-hardware { 
+    background-color: rgba(116, 199, 236, 0.2); 
+    color: var(--ctp-sapphire); 
+  }
+  .category-tool { 
+    background-color: rgba(116, 199, 236, 0.2); 
+    color: var(--ctp-sapphire); 
+  }
+  .category-research { 
+    background-color: rgba(180, 190, 254, 0.2); 
+    color: var(--ctp-lavender); 
+  }
+  .category-script { 
+    background-color: rgba(148, 226, 213, 0.2); 
+    color: var(--ctp-teal); 
+  }
+  
+  /* Tags */
+  .tag {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    background-color: var(--ctp-surface1);
+    color: var(--ctp-subtext1);
+    border-radius: 0.25rem;
+  }
+  
+  /* Additional hover effects */
+  .group-hover-lavender:hover {
+    color: var(--ctp-lavender);
+  }
+  
+  .read-more-link:hover {
+    color: var(--ctp-sky);
+  }
+  
+  /* Line clamp utility */
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

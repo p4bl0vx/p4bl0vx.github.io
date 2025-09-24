@@ -1,0 +1,267 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allProjects = await getCollection('projects');
+const publishedProjects = allProjects
+  .filter(project => !project.data.draft)
+  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+
+// Get all unique technologies
+const technologies = [...new Set(publishedProjects.flatMap(project => project.data.technologies || []))];
+---
+
+<MainLayout 
+  title="Proyectos - p4bl0vx"
+  description="Explora mis proyectos de ciberseguridad: herramientas, exploits, automatización y más desarrollos open-source."
+>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Header -->
+    <div class="text-center mb-16">
+      <h1 style="color: var(--ctp-text);" class="font-orbitron font-bold text-4xl md:text-5xl mb-4">
+        Mis <span style="color: var(--ctp-peach);">Proyectos</span>
+      </h1>
+      <p style="color: var(--ctp-subtext1);" class="text-lg max-w-3xl mx-auto leading-relaxed">
+        Una colección de herramientas, exploits, scripts de automatización y proyectos de investigación 
+        en ciberseguridad desarrollados con pasión y compartidos con la comunidad.
+      </p>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="mb-12">
+      <div class="flex flex-wrap justify-center gap-4">
+        <button 
+          class="filter-btn active" 
+          data-tech="all"
+          style="padding: 8px 16px; font-size: 0.875rem; font-weight: 500; border-radius: 8px; border: 1px solid var(--ctp-surface1); color: var(--ctp-subtext1); background-color: var(--ctp-surface0); transition: all 0.2s;"
+        >
+          Todos ({publishedProjects.length})
+        </button>
+        {technologies.slice(0, 6).map(tech => {
+          const count = publishedProjects.filter(project => (project.data.technologies || []).includes(tech)).length;
+          return (
+            <button 
+              class="filter-btn" 
+              data-tech={tech}
+              style="padding: 8px 16px; font-size: 0.875rem; font-weight: 500; border-radius: 8px; border: 1px solid var(--ctp-surface1); color: var(--ctp-subtext1); background-color: var(--ctp-surface0); transition: all 0.2s;"
+            >
+              {tech} ({count})
+            </button>
+          );
+        })}
+      </div>
+    </div>
+
+    <!-- Projects Grid -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16" id="projects-container">
+      {publishedProjects.length > 0 ? publishedProjects.map((project) => (
+        <article 
+          class="project-card group"
+          style="background-color: var(--ctp-surface0); border: 1px solid var(--ctp-surface1); border-radius: 12px; transition: all 0.3s;"
+          onmouseover="this.style.borderColor='var(--ctp-peach)'; this.style.transform='scale(1.05)'"
+          onmouseout="this.style.borderColor='var(--ctp-surface1)'; this.style.transform='scale(1)'"
+          data-technologies={(project.data.technologies || []).join(',')}
+        >
+          <div class="p-6">
+            <!-- Project Type & Status -->
+            <div class="flex items-center justify-between mb-4">
+              <span 
+                style="background-color: rgba(var(--ctp-peach-rgb), 0.2); color: var(--ctp-peach); padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; font-weight: bold;"
+              >
+                {project.data.type || 'Tool'}
+              </span>
+              <div class="flex items-center space-x-2">
+                {project.data.github && (
+                  <a 
+                    href={project.data.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style="color: var(--ctp-subtext1);" 
+                    class="transition-colors"
+                    onmouseover="this.style.color='var(--ctp-text)'" 
+                    onmouseout="this.style.color='var(--ctp-subtext1)'"
+                  >
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                  </a>
+                )}
+                {project.data.demo && (
+                  <a 
+                    href={project.data.demo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style="color: var(--ctp-subtext1);" 
+                    class="transition-colors"
+                    onmouseover="this.style.color='var(--ctp-blue)'" 
+                    onmouseout="this.style.color='var(--ctp-subtext1)'"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                    </svg>
+                  </a>
+                )}
+              </div>
+            </div>
+            
+            <h2 style="color: var(--ctp-text);" class="font-orbitron font-bold text-xl mb-3">
+              {project.data.title}
+            </h2>
+            
+            <p style="color: var(--ctp-subtext1);" class="text-sm leading-relaxed mb-4">
+              {project.data.description}
+            </p>
+            
+            <!-- Technologies -->
+            <div class="flex flex-wrap gap-2 mb-4">
+              {(project.data.technologies || []).slice(0, 3).map(tech => (
+                <span 
+                  style="background-color: var(--ctp-surface1); color: var(--ctp-subtext1); padding: 2px 8px; font-size: 0.75rem; border-radius: 4px;"
+                >
+                  {tech}
+                </span>
+              ))}
+              {(project.data.technologies || []).length > 3 && (
+                <span 
+                  style="background-color: var(--ctp-surface1); color: var(--ctp-subtext1); padding: 2px 8px; font-size: 0.75rem; border-radius: 4px;"
+                >
+                  +{project.data.technologies.length - 3}
+                </span>
+              )}
+            </div>
+            
+            <a 
+              href={`/projects/${project.slug}`}
+              style="color: var(--ctp-peach);" 
+              class="inline-flex items-center transition-colors font-medium"
+              onmouseover="this.style.color='var(--ctp-yellow)'" 
+              onmouseout="this.style.color='var(--ctp-peach)'"
+            >
+              Ver detalles
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+
+          <!-- Footer with publish date -->
+          <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--ctp-surface1); font-size: 0.75rem; color: var(--ctp-subtext0);" class="px-6 pb-6">
+            Publicado: {project.data.publishDate.toLocaleDateString('es-ES', { 
+              year: 'numeric', 
+              month: 'short', 
+              day: 'numeric' 
+            })}
+          </div>
+        </article>
+      )) : (
+        <!-- No projects placeholder -->
+        <div class="col-span-full text-center py-16">
+          <div style="width: 96px; height: 96px; background-color: var(--ctp-surface0);" class="rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg style="color: var(--ctp-subtext0);" class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+          </div>
+          <h3 style="color: var(--ctp-text);" class="font-orbitron font-bold text-xl mb-2">
+            Proyectos próximamente
+          </h3>
+          <p style="color: var(--ctp-subtext1);">
+            Estoy trabajando en algunos proyectos interesantes. ¡Vuelve pronto!
+          </p>
+        </div>
+      )}
+    </div>
+
+    <!-- No projects message (for filtering) -->
+    <div id="no-projects" class="hidden text-center py-16">
+      <div style="width: 96px; height: 96px; background-color: var(--ctp-surface0);" class="rounded-full flex items-center justify-center mx-auto mb-6">
+        <svg style="color: var(--ctp-subtext0);" class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+      </div>
+      <h3 style="color: var(--ctp-text);" class="font-orbitron font-bold text-xl mb-2">
+        No se encontraron proyectos
+      </h3>
+      <p style="color: var(--ctp-subtext1);">
+        Prueba con otro filtro de tecnología.
+      </p>
+    </div>
+
+    <!-- CTA Section -->
+    <div style="background-color: var(--ctp-mantle);" class="text-center py-16 rounded-2xl">
+      <h2 style="color: var(--ctp-text);" class="font-orbitron font-bold text-2xl mb-4">
+        ¿Tienes una idea interesante?
+      </h2>
+      <p style="color: var(--ctp-subtext1);" class="mb-8 max-w-2xl mx-auto">
+        Siempre estoy buscando nuevos desafíos y colaboraciones. Si tienes un proyecto 
+        de ciberseguridad que pueda ser interesante, ¡hablemos!
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/contact" class="btn-primary">
+          Proponer colaboración
+        </a>
+        <a 
+          href="https://github.com/p4bl0vx" 
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-secondary"
+        >
+          Ver más en GitHub
+        </a>
+      </div>
+    </div>
+  </div>
+</MainLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const projectCards = document.querySelectorAll('.project-card');
+    const noProjects = document.getElementById('no-projects');
+    let currentFilter = 'all';
+
+    // Filter functionality
+    filterButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        currentFilter = this.getAttribute('data-tech') || 'all';
+        
+        // Update active button
+        filterButtons.forEach(btn => {
+          btn.style.backgroundColor = 'var(--ctp-surface0)';
+          btn.style.color = 'var(--ctp-subtext1)';
+          btn.style.borderColor = 'var(--ctp-surface1)';
+        });
+        this.style.backgroundColor = 'var(--ctp-peach)';
+        this.style.color = 'var(--ctp-base)';
+        this.style.borderColor = 'var(--ctp-peach)';
+        
+        filterProjects();
+      });
+    });
+
+    function filterProjects() {
+      let visibleCount = 0;
+      
+      projectCards.forEach(card => {
+        const cardTechs = (card.getAttribute('data-technologies') || '').split(',');
+        const shouldShow = currentFilter === 'all' || cardTechs.includes(currentFilter);
+        
+        if (shouldShow) {
+          card.style.display = 'block';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      
+      // Show/hide no results message
+      if (visibleCount === 0 && projectCards.length > 0) {
+        noProjects?.classList.remove('hidden');
+      } else {
+        noProjects?.classList.add('hidden');
+      }
+    }
+    
+    // Initialize
+    filterProjects();
+  });
+</script>
